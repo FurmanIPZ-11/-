@@ -1,22 +1,47 @@
-### AL ###
-#Template for AL projects for Dynamics 365 Business Central
-#launch.json folder
-.vscode/
-#Cache folder
-.alcache/
-#Symbols folder
-.alpackages/
-#Snapshots folder
-.snapshots/
-#Testing Output folder
-.output/
-#Extension App-file
-*.app
-#Rapid Application Development File
-rad.json
-#Translation Base-file
-*.g.xlf
-#License-file
-*.flf
-#Test results file
-TestResults.xml
+#include<iostream>
+#include<vector>
+using namespace std;
+
+class Transport {
+public:
+    virtual void move() = 0;
+};
+
+class Car : public Transport {
+public:
+    void move() {
+        cout << "The car is moving on the road." << endl;
+    }
+};
+
+class Train : public Transport {
+public:
+    void move() {
+        cout << "The train is moving on the rails." << endl;
+    }
+};
+
+class Express : public Train {
+public:
+    void move() {
+        cout << "The express train is moving on the high-speed rails." << endl;
+    }
+};
+
+int main() {
+    vector<Transport*> vehicles;
+
+    Car car;
+    Train train;
+    Express express;
+
+    vehicles.push_back(&car);
+    vehicles.push_back(&train);
+    vehicles.push_back(&express);
+
+    for (int i = 0; i < vehicles.size(); i++) {
+        vehicles[i]->move();
+    }
+
+    return 0;
+}
