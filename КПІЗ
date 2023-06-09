@@ -1,0 +1,134 @@
+#include <iostream>
+
+template<typename T>
+class ListNode {
+public:
+    T data;
+    ListNode* next;
+
+    ListNode(T value) : data(value), next(nullptr) {}
+};
+
+template<typename T>
+class LinkedList {
+private:
+    ListNode<T>* head;
+
+public:
+    LinkedList() : head(nullptr) {}
+
+    void insert(T value) {
+        ListNode<T>* newNode = new ListNode<T>(value);
+
+        if (head == nullptr) {
+            head = newNode;
+        } else {
+            ListNode<T>* current = head;
+            while (current->next != nullptr) {
+                current = current->next;
+            }
+            current->next = newNode;
+        }
+    }
+
+    T& operator[](int index) {
+        ListNode<T>* current = head;
+        int currentIndex = 0;
+
+        while (current != nullptr) {
+            if (currentIndex == index) {
+                return current->data;
+            }
+            current = current->next;
+            currentIndex++;
+        }
+
+        throw std::out_of_range("Index out of range");
+    }
+
+    LinkedList<T> operator-(const LinkedList<T>& other) {
+        LinkedList<T> difference;
+
+        ListNode<T>* current = head;
+        while (current != nullptr) {
+            bool found = false;
+
+            ListNode<T>* otherCurrent = other.head;
+            while (otherCurrent != nullptr) {
+                if (current->data == otherCurrent->data) {
+                    found = true;
+                    break;
+                }
+                otherCurrent = otherCurrent->next;
+            }
+
+            if (!found) {
+                difference.insert(current->data);
+            }
+
+            current = current->next;
+        }
+
+        return difference;
+    }
+
+    bool operator==(const LinkedList<T>& other) {
+        if (this == &other) {
+            return true;
+        }
+
+        if (head == nullptr && other.head == nullptr) {
+            return true;
+        } else if (head == nullptr || other.head == nullptr) {
+            return false;
+        }
+
+        ListNode<T>* current = head;
+        ListNode<T>* otherCurrent = other.head;
+
+        while (current != nullptr && otherCurrent != nullptr) {
+            if (current->data != otherCurrent->data) {
+                return false;
+            }
+
+            current = current->next;
+            otherCurrent = otherCurrent->next;
+        }
+
+        return (current == nullptr && otherCurrent == nullptr);
+    }
+};
+
+int main() {
+    LinkedList<char> myList;
+    myList.insert('a');
+    myList.insert('b');
+    myList.insert('c');
+    myList.insert('d');
+
+    std::cout << "List elements: ";
+    for (int i = 0; i < 4; i++) {
+        std::cout << myList[i] << " ";
+    }
+    std::cout << std::endl;
+
+    LinkedList<char> otherList;
+    otherList.insert('b');
+    otherList.insert('d');
+
+    LinkedList<char> difference = myList - otherList;
+
+    std::cout << "Difference: ";
+    for (int i = 0; i < difference.getSize(); i++) {
+        std::cout << difference[i] << " ";
+    }
+    std::cout << std::endl;
+
+    if (myList == otherList) {
+        std::cout << "Lists are equal" << std::endl;
+    } else {
+        std::cout << "Lists are not equal" << std::endl;
+    }
+
+    return 0;
+}
